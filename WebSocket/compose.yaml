@@ -1,0 +1,21 @@
+﻿
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgresDB
+    environment:
+      POSTGRES_USER: ymonada
+      POSTGRES_PASSWORD: 111
+      POSTGRES_DB: appDB
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+
+volumes:
+  postgres_data:
+
+networks:
+  backend_network:

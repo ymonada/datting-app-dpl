@@ -1,0 +1,58 @@
+﻿<Project>
+  <ItemGroup>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\photos\0\9\8\78b3f7ed-e455-4b69-9969-05b02f7b429a890.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>WebSocket</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/WebSocket</BasePath>
+      <RelativePath>photos/0/9/8/78b3f7ed-e455-4b69-9969-05b02f7b429a890.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>b14l8waux0</Fingerprint>
+      <Integrity>r68TqggyNy4VnDqbZJ+x8OPqaKp3EixEX6hXVLdiCqQ=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\photos\0\9\8\78b3f7ed-e455-4b69-9969-05b02f7b429a890.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\photos\2\6\1\6e1251ca-0b2d-4cec-9683-f989c4965593162.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>WebSocket</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/WebSocket</BasePath>
+      <RelativePath>photos/2/6/1/6e1251ca-0b2d-4cec-9683-f989c4965593162.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>vt3pe9sk2f</Fingerprint>
+      <Integrity>ozF5sVPwEeg1doQ7zp/4aFPHiWMCfDgr3LkNAQ+IuZ0=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\photos\2\6\1\6e1251ca-0b2d-4cec-9683-f989c4965593162.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\photos\8\7\7\68313cd8-e634-42ac-bf04-603eed8ac2e6778.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>WebSocket</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/WebSocket</BasePath>
+      <RelativePath>photos/8/7/7/68313cd8-e634-42ac-bf04-603eed8ac2e6778.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>flsrj5z0fk</Fingerprint>
+      <Integrity>gyAuEN0YZ4w3VImlzMK/33pFcMg5dXs0VlomfDjkXgs=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\photos\8\7\7\68313cd8-e634-42ac-bf04-603eed8ac2e6778.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+  </ItemGroup>
+</Project>

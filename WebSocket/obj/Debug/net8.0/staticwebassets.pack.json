@@ -1,0 +1,37 @@
+{
+  "Files": [
+    {
+      "Id": "/home/zhenya/dotnet/WebSocket/wwwroot/photos/0/9/8/78b3f7ed-e455-4b69-9969-05b02f7b429a890.jpg",
+      "PackagePath": "staticwebassets/photos/0/9/8/78b3f7ed-e455-4b69-9969-05b02f7b429a890.jpg"
+    },
+    {
+      "Id": "/home/zhenya/dotnet/WebSocket/wwwroot/photos/2/6/1/6e1251ca-0b2d-4cec-9683-f989c4965593162.jpg",
+      "PackagePath": "staticwebassets/photos/2/6/1/6e1251ca-0b2d-4cec-9683-f989c4965593162.jpg"
+    },
+    {
+      "Id": "/home/zhenya/dotnet/WebSocket/wwwroot/photos/8/7/7/68313cd8-e634-42ac-bf04-603eed8ac2e6778.jpg",
+      "PackagePath": "staticwebassets/photos/8/7/7/68313cd8-e634-42ac-bf04-603eed8ac2e6778.jpg"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.WebSocket.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.WebSocket.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.WebSocket.props",
+      "PackagePath": "build\\WebSocket.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.WebSocket.props",
+      "PackagePath": "buildMultiTargeting\\WebSocket.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.WebSocket.props",
+      "PackagePath": "buildTransitive\\WebSocket.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

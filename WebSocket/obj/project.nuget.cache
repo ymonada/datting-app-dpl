@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "mNffxGNGe/U=",
+  "dgSpecHash": "/yPmwoNOv5Q=",
   "success": true,
-  "projectFilePath": "/home/zhenya/dotnet/WebSocket/WebSocket.csproj",
+  "projectFilePath": "/home/zhenya/dotnet/dpl/WebSocket/WebSocket.csproj",
   "expectedPackageFiles": [
     "/home/zhenya/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/zhenya/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",

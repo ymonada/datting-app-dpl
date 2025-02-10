@@ -5049,11 +5049,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/zhenya/dotnet/WebSocket/WebSocket.csproj",
+      "projectUniqueName": "/home/zhenya/dotnet/dpl/WebSocket/WebSocket.csproj",
       "projectName": "WebSocket",
-      "projectPath": "/home/zhenya/dotnet/WebSocket/WebSocket.csproj",
+      "projectPath": "/home/zhenya/dotnet/dpl/WebSocket/WebSocket.csproj",
       "packagesPath": "/home/zhenya/.nuget/packages/",
-      "outputPath": "/home/zhenya/dotnet/WebSocket/obj/",
+      "outputPath": "/home/zhenya/dotnet/dpl/WebSocket/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/zhenya/.nuget/NuGet/NuGet.Config"

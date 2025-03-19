@@ -1,6 +1,6 @@
-/bin/
-/obj/
-/wwwroot/photos/*
+/WebSocket/bin/
+/WebSocket/obj/
+/WebSocket/wwwroot/photos/*
 
 /WebSocket/.idea/
 /WebSocket/.vs/

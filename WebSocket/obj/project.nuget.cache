@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "/yPmwoNOv5Q=",
+  "dgSpecHash": "xRry8rsIxkA=",
   "success": true,
   "projectFilePath": "/home/zhenya/dotnet/dpl/WebSocket/WebSocket.csproj",
   "expectedPackageFiles": [
@@ -101,8 +101,8 @@
     "/home/zhenya/.nuget/packages/system.text.encodings.web/9.0.0/system.text.encodings.web.9.0.0.nupkg.sha512",
     "/home/zhenya/.nuget/packages/system.text.json/9.0.0/system.text.json.9.0.0.nupkg.sha512",
     "/home/zhenya/.nuget/packages/system.threading.channels/8.0.0/system.threading.channels.8.0.0.nupkg.sha512",
-    "/home/zhenya/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.12/microsoft.aspnetcore.app.ref.8.0.12.nupkg.sha512",
-    "/home/zhenya/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.12/microsoft.netcore.app.host.linux-x64.8.0.12.nupkg.sha512"
+    "/home/zhenya/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.14/microsoft.aspnetcore.app.ref.8.0.14.nupkg.sha512",
+    "/home/zhenya/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.14/microsoft.netcore.app.host.linux-x64.8.0.14.nupkg.sha512"
   ],
   "logs": []
 }

@@ -1,12 +1,13 @@
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebSocket.db;
 using WebSocket.dto;
-using WebSocket.Entity;
 using WebSocket.Service;
 
 namespace WebSocket.Controlles;
@@ -15,47 +16,47 @@ namespace WebSocket.Controlles;
 [Route("[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly AuthService _authService;
+  private readonly AuthService _authService;
 
-    public AuthController(AuthService authService)
+  public AuthController(AuthService authService)
+  {
+    _authService = authService;
+  }
+  [HttpPost("login")]
+  public async Task<IActionResult> Login([FromBody] LoginDto request)
+  {
+    var result = await _authService.Login(request);
+
+    if (result.IsSuccess)
     {
-        _authService = authService;
+      await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, result.Data);
+      return Ok();
     }
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDto request)
+    return Unauthorized(result.Message);
+
+  }
+  [HttpPost("register")]
+  public async Task<IActionResult> RegisterUser([FromBody] RegisterDto user)
+  {
+    var result = await _authService.Register(user);
+    if (!result.IsSuccess) return BadRequest(result.Message);
+    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, result.Data);
+    return Ok();
+  }
+  [HttpPost("logout")]
+  public async Task<IActionResult> Logout()
+  {
+    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+    return Ok(new { message = "Logout successful" });
+  }
+  [HttpGet("check")]
+  public IActionResult CheckAuth()
+  {
+    if (User.Identity?.IsAuthenticated == true)
     {
-        var result = await _authService.Login(request);
-        if (result.IsSuccess)
-        {
-            return Ok(result.Data);
-        }
-        return Unauthorized(result.Message);
-        
+      return Ok(new { isAuthenticated = true });
     }
-    [HttpPost("register")]
-    public async Task<IActionResult> RegisterUser(RegisterDto user)
-    {
-        var result = await _authService.Register(user);
-        if (result.IsSuccess)
-        {
-            return Ok(result.Data);
-        }
-        return BadRequest(result.Message);
-    }
-    // [HttpPost("logout")]
-    // public IActionResult Logout()
-    // {
-    //     // Припустимо, що токен передано через заголовок Authorization
-    //     var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-    //
-    //     // Зберегти токен у чорний список (наприклад, Redis)
-    //     if (!string.IsNullOrEmpty(token))
-    //     {
-    //         // Додаємо токен до чорного списку з терміном дії (експірації токена)
-    //         _blacklistService.AddTokenToBlacklist(token);
-    //     }
-    //
-    //     return Ok(new { message = "Logged out successfully." });
-    // }
+    return Unauthorized(new { isAuthenticated = false });
+  }
 }
 

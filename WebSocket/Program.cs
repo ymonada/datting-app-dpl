@@ -23,16 +23,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
-        policy.AllowAnyHeader()
+    options.AddPolicy("AllowFrontend", policy =>
+        policy.WithOrigins("https://localhost:3000")
+            .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials()
-            .WithOrigins("http://localhost:5173")); // Додай адресу клієнта
+            .AllowCredentials());
 });
 
 var app = builder.Build();
-app.UseCors();
-
+app.UseCors("AllowFrontend");
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllers();
@@ -44,6 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.MapHub<ProfileHub>("/hubs/profile");
-app.MapHub<FinderHub>("/chats");
+app.MapHub<Chat>("/chat");
+
 app.Run();
 

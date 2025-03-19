@@ -80,6 +80,7 @@ public class UserService
                 )
         };
     }
+    public async 
     public async Task<ServiceResult<UserProfileDto>> UpdateMyProfile(int userId, [FromBody] UserUpdateProfileDto newProfileDto)
     {
         var currentUser = await GetCurrentUser(userId);

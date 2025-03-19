@@ -14,54 +14,54 @@ namespace WebSocket.Controlles;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly UserService _userService;
+  private readonly UserService _userService;
 
-    public UserController(UserService userService)
-    {
-        _userService  = userService;
-    }
-   
-    [HttpGet("/profile")]
-    [Authorize]
-    public async Task<IActionResult> GetUserProfile()
-    {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var result = await _userService.GetUserInfo(userId);
-        if (result.IsSuccess)
-        {
-            return Ok(result.Data);
-        }
-        return BadRequest(result.Message);
-    }
+  public UserController(UserService userService)
+  {
+    _userService = userService;
+  }
 
-    [HttpPost("/setActive")]
-    [Authorize]
-    public async Task<IActionResult> SetProfileActive()
+  [HttpGet("/profile")]
+  [Authorize]
+  public async Task<IActionResult> GetUserProfile()
+  {
+    var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+    var result = await _userService.GetUserInfo(userId);
+    if (result.IsSuccess)
     {
-        await _userService.SetActiveAll();
-        return Ok();
+      return Ok(result.Data);
     }
-    [HttpGet("/find")]
-    public async Task<IActionResult> Find()
-    {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var result = await _userService.Finding(userId);
-        if (result.IsSuccess)
-        {
-            return Ok(result.Data);
-        }
-        return BadRequest(result.Message);
-    }
+    return BadRequest(result.Message);
+  }
 
-    [HttpPut("/updateProfile")]
-    [Authorize]
-    public async Task<IActionResult> UpdateProfile(UserUpdateProfileDto newProfile)
+  [HttpPost("/setActive")]
+  [Authorize]
+  public async Task<IActionResult> SetProfileActive()
+  {
+    await _userService.SetActiveAll();
+    return Ok();
+  }
+  [HttpGet("/find")]
+  public async Task<IActionResult> Find()
+  {
+    var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+    var result = await _userService.Finding(userId);
+    if (result.IsSuccess)
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var result = await _userService.UpdateMyProfile(userId, newProfile);
-        if (result.IsSuccess)
-            return Ok(result.Message);
-        return BadRequest(result.Message);
+      return Ok(result.Data);
     }
-    
+    return BadRequest(result.Message);
+  }
+
+  [HttpPut("/updateProfile")]
+  [Authorize]
+  public async Task<IActionResult> UpdateProfile(UserUpdateProfileDto newProfile)
+  {
+    var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+    var result = await _userService.UpdateMyProfile(userId, newProfile);
+    if (result.IsSuccess)
+      return Ok(result.Message);
+    return BadRequest(result.Message);
+  }
+
 }

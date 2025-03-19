@@ -2,7 +2,7 @@
 /obj/
 /wwwroot/photos/*
 
-.idea/
-.vs/
-.vscode/
+/WebSocket/.idea/
+/WebSocket/.vs/
+/WebSocket/.vscode/
 

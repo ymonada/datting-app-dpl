@@ -1,79 +1,47 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using WebSocket.db;
+using WebSocket.dto;
 using WebSocket.Entity;
 using WebSocket.Service;
 
 namespace WebSocket.Hubs;
 
 [Authorize]
-public class Chat : Hub
+public class ChatHub : Hub
 {
-    private readonly ILogger<Chat> _logger;
-    private readonly UserService _userService;
+    private readonly AppDbContext _context;
 
-    public Chat(ILogger<Chat> logger, UserService userService)
+    public ChatHub(AppDbContext context)
     {
-        _logger = logger;
-        _userService = userService;
+        _context = context;
     }
 
-    private int GetUserId() =>int.Parse(Context.User
-        .FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
-    
-    public async Task SendMessage(string message)
+    public async Task SendMessage(string receiverId, string message)
     {
-        await Clients.All.SendAsync("ReceiveMessage", message);
-        _logger.LogInformation($"Message received: {message}");
+        var senderId = int.Parse(Context.UserIdentifier);
+        var match = await _context.Matches
+            .FirstOrDefaultAsync(m => (m.FirstUserId == senderId && m.SecondUserId == int.Parse(receiverId)) ||
+                                      (m.FirstUserId == int.Parse(receiverId) && m.SecondUserId == senderId));
+
+        if (match == null) throw new HubException("Match not found");
+
+        var msg = new Message
+        {
+            MatchId = match.Id,
+            SenderId = senderId,
+            Content = message,
+            SentAt = DateTime.UtcNow,
+            IsRead = false
+        };
+
+        _context.Messages.Add(msg);
+        await _context.SaveChangesAsync();
+
+        await Clients.User(receiverId).SendAsync("ReceiveMessage", senderId.ToString(), message);
     }
-    
-    // public async Task GetProfile()
-    // {   var userId = GetUserId();
-    //     _logger.LogInformation($"\n\n\n\n\n\nGet profile: {userId}\n\n\n\n\n\n\n\n\n\n\n");
-    //     var message = "No user found";
-    //     if (userId == 0)
-    //     {
-    //         message= "No authenticated user";
-    //     }
-    //     var result = await _userService.GetUserInfo(userId);
-    //     if (result.IsSuccess)
-    //     {
-    //         await Clients.Caller.SendAsync("ReceiveProfile",result.Data);
-    //         _logger.LogInformation($"User {result.Data} logged in");
-    //     }
-    //     else
-    //     {
-    //         await Clients.Caller.SendAsync("ReceiveProfile", message);
-    //     }
-    public async Task GetProfile()
-    {
-        var userId = GetUserId();
-        _logger.LogInformation($"📢 Extracted userId: {userId}");
-
-        if (userId == 0)
-        {
-            _logger.LogWarning("⚠️ No authenticated user");
-            await Clients.Caller.SendAsync("ReceiveProfile", "No authenticated user");
-            return;
-        }
-
-        var result = await _userService.GetUserInfo(userId);
-        if (result.IsSuccess)
-        {
-            _logger.LogInformation($"✅ Found user: {result.Data}");
-            await Clients.Caller.SendAsync("ReceiveProfile", result.Data);
-        }
-        else
-        {
-            _logger.LogWarning("⚠️ No user found");
-            await Clients.Caller.SendAsync("ReceiveProfile", "No user found");
-        }
-    }
-
-
-       
-       
-           
 }
 
 

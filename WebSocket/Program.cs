@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using WebSocket.db;
@@ -42,8 +43,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.MapHub<ProfileHub>("/hubs/profile");
-app.MapHub<Chat>("/chat");
+
+app.MapHub<ChatHub>("/chat");
 
 app.Run();
 

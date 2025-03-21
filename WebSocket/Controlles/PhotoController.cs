@@ -16,15 +16,15 @@ public class PhotoController : ControllerBase
     public PhotoController(UserService userService, PhotoService photoService)
     {
         _userService = userService;
-        _photoService  = photoService;
+        _photoService = photoService;
     }
-    
+
     [HttpPut("/upload")]
     [Authorize]
     public async Task<IActionResult> UploadPhoto([FromForm] List<IFormFile> files)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var result = await _photoService.UpdateMyProfilePhotos(int.Parse(userId),files);
+        var result = await _photoService.UpdateMyProfilePhotos(int.Parse(userId), files);
         if (result.IsSuccess)
         {
             return Ok(result.Data);

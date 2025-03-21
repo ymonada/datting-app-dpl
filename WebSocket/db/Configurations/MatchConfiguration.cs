@@ -19,5 +19,10 @@ public class MatchConfiguration: IEntityTypeConfiguration<Match>
             .WithMany()
             .HasForeignKey(u=>u.SecondUserId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.HasMany(m=>m.MessagesHistory)
+            .WithOne(m=>m.Match)
+            .HasForeignKey(m=>m.MatchId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

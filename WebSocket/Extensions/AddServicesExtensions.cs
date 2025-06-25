@@ -1,3 +1,4 @@
+using WebSocket.Features.User;
 using WebSocket.Service;
 
 namespace WebSocket.Extensions;

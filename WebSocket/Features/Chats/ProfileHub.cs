@@ -1,13 +1,13 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using SignalRSwaggerGen.Attributes;
 using WebSocket.dto;
+using WebSocket.Features.User;
 using WebSocket.Service;
 
-namespace WebSocket.Hubs;
+namespace WebSocket.Features.Chats;
 [Authorize]
-[SignalRHub]
+
 public class ProfileHub : Hub
 {
     private readonly UserService _userService;
@@ -25,7 +25,7 @@ public class ProfileHub : Hub
         return int.Parse(userIdClaim);
     }
 
-    public async Task GetProfile()
+    public async Task GetProfile(CancellationToken ct)
     {
         try
         {
@@ -34,16 +34,7 @@ public class ProfileHub : Hub
             {
                 throw new HubException("User is not authenticated.");
             }
-            var result = await _userService.GetUserInfo(userId);
-            if (result.IsSuccess)
-            {
-                await Clients.Caller.SendAsync("ReceiveProfile", result.Message);
-            }
-            else
-            {
-                await Clients.Caller.SendAsync("ReceiveProfile", result.Message);
-            }
-
+            var result = await _userService.GetUserInfo(userId, ct);
         }
         catch (HubException ex)
         {
@@ -51,27 +42,27 @@ public class ProfileHub : Hub
         }
     }
 
-    public async Task ProfileUpdate(UserUpdateProfileDto profile)
-    {
-        try
-        {
-            var userId = GetUserId();
-            if (userId == 0)
-            {
-                throw new HubException("User is not authenticated.");
-            }
-            var result = await _userService.UpdateMyProfile(userId, profile);
-            if (result.IsSuccess)
-            {
-                await Clients.Caller.SendAsync("ReceiveProfile", result.Data);
-            }
-            await Clients.Caller.SendAsync("ReceiveProfile", result.Message);
-        }
-        catch (HubException ex)
-        {
-            await Console.Error.WriteLineAsync($"Error in GetProfile: {ex.Message} \"An unexpected error occurred while fetching the profile.\"");
-        }
-    }
+    // public async Task ProfileUpdate(UserUpdateProfileDto profile, CancellationToken ct)
+    // {
+    //     try
+    //     {
+    //         var userId = GetUserId();
+    //         if (userId == 0)
+    //         {
+    //             throw new HubException("User is not authenticated.");
+    //         }
+    //         var result = await _userService.UpdateMyProfile(userId, profile, ct);
+    //         if (result.IsSuccess)
+    //         {
+    //             await Clients.Caller.SendAsync("ReceiveProfile", result.Data);
+    //         }
+    //         await Clients.Caller.SendAsync("ReceiveProfile", result.Message);
+    //     }
+    //     catch (HubException ex)
+    //     {
+    //         await Console.Error.WriteLineAsync($"Error in GetProfile: {ex.Message} \"An unexpected error occurred while fetching the profile.\"");
+    //     }
+    // }
 
     public async Task GetMyLikes()
     {

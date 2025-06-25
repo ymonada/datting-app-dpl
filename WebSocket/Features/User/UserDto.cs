@@ -1,15 +1,13 @@
-using WebSocket.Entity;
-using WebSocket.Service;
 using WebSocket.dto;
-namespace WebSocket.dto;
+using WebSocket.Entity;
 
-public record UserProfileDto(int Id
-   // , bool IsActive
+namespace WebSocket.Features.User;
+
+public record UserDto(int Id
     , string Name
     , int Age
     , string City
     , string Bio
     , Gender Gender
     , Gender GenderPreference
-    //, ICollection<RoleDto> Roles
     , ICollection<PhotoDto> Photos);

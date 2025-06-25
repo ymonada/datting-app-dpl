@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebSocket.db;
 using WebSocket.dto;
+using WebSocket.Features.User;
 
 namespace WebSocket.Controlles;
 
@@ -32,12 +33,12 @@ public class ChatController : ControllerBase
             .ToListAsync();
 
         if (result.Count == 0)
-            return Ok(new List<UserProfileDto>()); // Повертаємо порожній список, якщо немає матчів
+            return Ok(new List<UserDto>()); // Повертаємо порожній список, якщо немає матчів
 
         var usersDialog = await _context.Users
             .Include(u => u.Photos)
             .Where(u => result.Contains(u.Id))
-            .Select(u => new UserProfileDto(
+            .Select(u => new UserDto(
                 u.Id,
                 u.Name,
                 u.Age,

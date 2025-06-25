@@ -16,9 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Some API v1", Version = "v1" });
-    // here some other configurations maybe...
-    options.AddSignalRSwaggerGen();
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "API v1", Version = "v1" });
 });
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));

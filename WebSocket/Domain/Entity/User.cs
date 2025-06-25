@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using WebSocket.dto;
+using WebSocket.Features.User;
 
 namespace WebSocket.Entity;
 
@@ -27,9 +29,15 @@ public class User
     public ICollection<Photo> Photos { get; set; } = [];
     public ICollection<ProfileHistory> ProfileHistory { get; set; } = [];
     public ICollection<Match> Matches { get; set; } = [];
-
-    public static ReadOnlySpan<byte> FindFirstValue(string httpSchemasXmlsoapOrgWsIdentityClaimsNameidentifier)
-    {
-        throw new NotImplementedException();
-    }
+    
+    public UserDto ToDto() => new UserDto(
+        Id
+        , Name
+        , Age
+        , City
+        , Bio
+        , Gender
+        , GenderPreference
+        , Photos.Select(r => new PhotoDto(r.Id, r.Url, r.ContentType)).ToList()
+    );
 }

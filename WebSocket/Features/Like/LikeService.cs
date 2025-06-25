@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using WebSocket.db;
 using WebSocket.dto;
 using WebSocket.Entity;
+using WebSocket.Features.User;
+
 namespace WebSocket.Service;
 
 public class LikeService
@@ -25,9 +27,9 @@ public class LikeService
             .ThenInclude(u=>u.UserFrom)
             .FirstOrDefaultAsync(u=> u.Id == userId);
     }
-    private UserProfileDto GetUserDto(User user)
+    private UserDto GetUserDto(User user)
     {
-        return new UserProfileDto(
+        return new UserDto(
             user.Id
             //, user.IsActive
             , user.Name
@@ -134,12 +136,12 @@ public class LikeService
             Message = "ok"
         };
     }
-    public async Task<ServiceResult<List<UserProfileDto>>> GetLikes(int userId)
+    public async Task<ServiceResult<List<UserDto>>> GetLikes(int userId)
     {
         var user = await GetCurrentUser(userId);
         if (user == null)
         {
-            return new ServiceResult<List<UserProfileDto>>
+            return new ServiceResult<List<UserDto>>
             {
                 IsSuccess = false,
                 Message = "user not found"
@@ -147,7 +149,7 @@ public class LikeService
         }
         var users = await _context.Likes
             .Where(u => u.UserToId == userId)
-            .Select(u => new UserProfileDto(
+            .Select(u => new UserDto(
                     u.UserFrom.Id
                     //, user.IsActive
                     , u.UserFrom.Name
@@ -160,7 +162,7 @@ public class LikeService
                     ,  u.UserFrom.Photos.Select(r => new PhotoDto(r.Id, r.Url, r.ContentType)).ToList())
             )
             .ToListAsync();
-        return new ServiceResult<List<UserProfileDto>>
+        return new ServiceResult<List<UserDto>>
         {
             IsSuccess = true,
             Data = users,

@@ -22,11 +22,11 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
             .IsRequired()
             .HasDefaultValue(false);
 
-        // Зв’язок із Match
-        builder.HasOne(m => m.Match)
-            .WithMany(m => m.MessagesHistory) // Додаємо колекцію Messages у Match
-            .HasForeignKey(m => m.MatchId)
-            .OnDelete(DeleteBehavior.Cascade); // Видаляємо повідомлення, якщо матч видалено
+        // // Зв’язок із Match
+        // builder.HasOne(m => m.Match)
+        //     .WithMany(m => m.MessagesHistory) // Додаємо колекцію Messages у Match
+        //     .HasForeignKey(m => m.MatchId)
+        //     .OnDelete(DeleteBehavior.Cascade); // Видаляємо повідомлення, якщо матч видалено
 
         // Зв’язок із Sender (User)
         builder.HasOne(m => m.Sender)

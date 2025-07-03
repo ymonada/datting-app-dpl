@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WebSocket.Domain.Entity;
 using WebSocket.Entity;
 
 namespace WebSocket.db.Configurations;
@@ -20,9 +21,9 @@ public class MatchConfiguration: IEntityTypeConfiguration<Match>
             .HasForeignKey(u=>u.SecondUserId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        builder.HasMany(m=>m.MessagesHistory)
-            .WithOne(m=>m.Match)
-            .HasForeignKey(m=>m.MatchId)
-            .OnDelete(DeleteBehavior.Restrict);
+        // builder.HasMany(m=>m.MessagesHistory)
+        //     .WithOne(m=>m.Match)
+        //     .HasForeignKey(m=>m.MatchId)
+        //     .OnDelete(DeleteBehavior.Restrict);
     }
 }

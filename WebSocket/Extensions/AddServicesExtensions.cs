@@ -1,3 +1,5 @@
+using WebSocket.Features.Like;
+using WebSocket.Features.Photos;
 using WebSocket.Features.User;
 using WebSocket.Service;
 

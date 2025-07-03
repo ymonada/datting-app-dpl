@@ -1,9 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebSocket.Service;
 
-namespace WebSocket.Controlles;
+namespace WebSocket.Features.Like;
 
 
 [ApiController]
@@ -16,66 +15,48 @@ public class LikeController : ControllerBase
   {
     _likeService = likeService;
   }
+  private int GetId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException());
   [HttpPost("/sendLike")]
   [Authorize]
   public async Task<IActionResult> SendLike([FromBody] int userFollower)
   {
-    var userSenderId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    if (userSenderId != null)
-    {
-      var result = await _likeService.SendLike(int.Parse(userSenderId), userFollower);
-      if (result.IsSuccess)
-        return Ok(result.Data);
-    }
-    return BadRequest();
-  }
+    var result = await _likeService.Like(GetId(), userFollower);
+    return result.Match<IActionResult>(
+      Ok,
+      err=> BadRequest(err.Description));
+   }
   [HttpPost("/sendDislike")]
   [Authorize]
   public async Task<IActionResult> SendDislike([FromBody] int idUserDisliked)
   {
-    var userSenderId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    if (userSenderId == null)
-      return BadRequest();
-
-    await _likeService.SendDislike(int.Parse(userSenderId), idUserDisliked);
+    await _likeService.Pass(GetId(), idUserDisliked);
     return Ok();
   }
   [HttpGet("/mylikes")]
   [Authorize]
   public async Task<IActionResult> GetMyLikes()
   {
-    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    var result = await _likeService.GetLikes(int.Parse(userId));
-    if (result.IsSuccess)
-    {
-      return Ok(result.Data);
-    }
-    return Ok(result.Message);
+    var result = await _likeService.GetLikes(GetId());
+    return result.Match<IActionResult>(Ok,
+      err=> BadRequest(err.Description));
   }
 
   [HttpPost("/dislikeResponse")]
   [Authorize]
   public async Task<IActionResult> SendDislikeResponse([FromBody] int userDislikedId)
   {
-    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    var result = await _likeService.SendDislikeResponse(int.Parse(userId), userDislikedId);
-    if (result.IsSuccess)
-    {
-      return Ok();
-    }
-    return BadRequest(result.Message);
+    var result = await _likeService.PassResponse(GetId(), userDislikedId);
+    return result.Match<IActionResult>(Ok,
+      err=> BadRequest(err.Description));
   }
+  
   [HttpPost("/likeResponse")]
   [Authorize]
   public async Task<IActionResult> SendLikeResponse([FromBody] int userLikedId)
   {
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    var result = await _likeService.SendLikeResponse(int.Parse(userId), userLikedId);
-    if (result.IsSuccess)
-    {
-      return Ok();
-    }
-    return BadRequest(result.Message);
+    var result = await _likeService.LikeResponse(GetId(), userLikedId);
+    return result.Match<IActionResult>(Ok
+      , err => BadRequest(err.Description));
   }
-
 }

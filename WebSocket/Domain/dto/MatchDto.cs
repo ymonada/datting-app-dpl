@@ -1,3 +1,3 @@
-namespace WebSocket.dto;
+namespace WebSocket.Domain.dto;
 
-public record MatchDto(int firstUserId, int secondUserId);
+public record MatchDto(int FirstUserId, int SecondUserId);

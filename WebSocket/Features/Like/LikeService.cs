@@ -1,11 +1,12 @@
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using WebSocket.db;
-using WebSocket.dto;
-using WebSocket.Entity;
+using WebSocket.Domain.Entity;
+using WebSocket.Domain.dto;
 using WebSocket.Features.User;
+using WebSocket.Service;
+using WebSocket.Errors;
 
-namespace WebSocket.Service;
+namespace WebSocket.Features.Like;
 
 public class LikeService
 {
@@ -17,7 +18,7 @@ public class LikeService
         _context = context;
         _userService = userService;
     }
-    private  async Task<User?> GetCurrentUser(int userId)
+    private  async Task<Entity.User?> GetCurrentUser(int userId)
     {
         return await _context.Users
             .Include(u => u.Roles)
@@ -27,36 +28,13 @@ public class LikeService
             .ThenInclude(u=>u.UserFrom)
             .FirstOrDefaultAsync(u=> u.Id == userId);
     }
-    private UserDto GetUserDto(User user)
-    {
-        return new UserDto(
-            user.Id
-            //, user.IsActive
-            , user.Name
-            , user.Age
-            , user.City
-            , user.Bio
-            ,user.Gender
-            ,user.GenderPreference
-            //, user.Roles.Select(r => new RoleDto(r.RoleId, r.Role.Name)).ToList()
-            , user.Photos.Select(r => new PhotoDto(r.Id, r.Url, r.ContentType)).ToList()
-        );
-            
-    }
-    public async Task<ServiceResult<LikeDto>> SendLike(int idSender, int idFollower)
+    public async Task<Fin<LikeDto, Error>> Like(int idSender, int idFollower)
     {
         var lk = await _context.Likes.FirstOrDefaultAsync(l => 
             l.UserToId == idFollower && l.UserFromId == idSender);
         if (lk != null)
-            return new ServiceResult<LikeDto>
-            {
-                IsSuccess = true, Data = new LikeDto(
-                    lk.Id
-                    , lk.UserFromId
-                    , lk.UserToId
-                    ), Message = "like already exists"
-            };
-        var like = new Like
+            return lk.ToDto();
+        var like = new Domain.Entity.Like
         {
             UserFromId = idSender,
             UserToId = idFollower
@@ -64,110 +42,57 @@ public class LikeService
         await _context.Likes.AddAsync(like);
         await _userService.AddToHistory(idSender, idFollower);
         await _context.SaveChangesAsync();
-        return new ServiceResult<LikeDto>
-        {
-            IsSuccess = true,
-            Data = new LikeDto(like.Id, like.UserFromId, like.UserToId),
-            Message = "ok"
-        };
+        return like.ToDto();
     }
-    //
-    public async Task SendDislike(int userId, int idUserDisliked)
-    {
+    
+    public async Task Pass(int userId, int idUserDisliked) =>
         await _userService.AddToHistory(userId, idUserDisliked);
-        //await _context.Likes.Where(u=>u.UserToId == userId && u.UserFromId == idUserDisliked).ExecuteUpdateAsync()
-    }
-
-    public async Task<ServiceResult<MatchDto>> SendLikeResponse(int userId, int idFollower)
+    
+    public async Task<Fin<MatchDto,Error>> LikeResponse(int userId, int idFollower)
     {
         var currentUser = await GetCurrentUser(userId);
         var followerUser = await GetCurrentUser(idFollower);
+        if(currentUser == null ||  followerUser == null)
+            return Error.NotFound("Not found user and follower");
         var like = await _context.Likes
             .FirstOrDefaultAsync(l => l.UserToId == userId & l.UserFromId == idFollower);
-        if (currentUser == null || followerUser == null || like == null || !currentUser.ReceiveLikes.Contains(like))
-            return new ServiceResult<MatchDto>
-            {
-                IsSuccess = false,
-                Message = "No user or like found"
-            };
+        if (like == null || !currentUser.ReceiveLikes.Contains(like))
+            return Error.NotFound("Not like found");
         _context.Likes.Remove(like);
-        ///перевіряти чи існує пара, ящо та нічого не робити
-        //
+
         var matchExist = await _context.Matches
             .FirstOrDefaultAsync(u=>
                 (u.FirstUserId == currentUser.Id && u.SecondUserId == followerUser.Id)
             || (u.FirstUserId == followerUser.Id && u.SecondUserId == currentUser.Id));
-        if (matchExist ==  null)
+        if (matchExist !=  null)
+           return matchExist.ToDto();
+        var match = new Match
         {
-            var match = new Match
-            {
-                FirstUserId = currentUser.Id,
-                SecondUserId = followerUser.Id
-            };
-            await _context.Matches.AddAsync(match);
-        }
-        await _context.SaveChangesAsync();
-        return new ServiceResult<MatchDto>
-        {
-            IsSuccess = true,
-            Data = new MatchDto(
-                currentUser.Id,
-                followerUser.Id),
-            Message = "ok"
+            FirstUserId = currentUser.Id,
+            SecondUserId = followerUser.Id
         };
+        await _context.Matches.AddAsync(match);
+        await _context.SaveChangesAsync();
+        return match.ToDto();
     }
-    public async Task<ServiceResult<LikeDto>> SendDislikeResponse(int userId, int idFollower)
+    public async Task<Fin<LikeDto, Error>> PassResponse(int userId, int idFollower)
     {
         var like = await _context.Likes
             .FirstOrDefaultAsync(l => l.UserToId == userId & l.UserFromId == idFollower);
         if (like == null)
-        {
-            return new ServiceResult<LikeDto>
-            {
-                IsSuccess = false,
-                Message = $"Not like found userFrm {userId} userTo {idFollower}"
-            };
-        }
+            return Error.NotFound($"Not like found userFrm {userId} userTo {idFollower}");
         _context.Likes.Remove(like);
         await _context.SaveChangesAsync();
-        return new ServiceResult<LikeDto>
-        {
-            IsSuccess = true,
-            Message = "ok"
-        };
+        return like.ToDto();
     }
-    public async Task<ServiceResult<List<UserDto>>> GetLikes(int userId)
+    public async Task<Fin<List<UserDto>,Error>> GetLikes(int userId)
     {
-        var user = await GetCurrentUser(userId);
-        if (user == null)
-        {
-            return new ServiceResult<List<UserDto>>
-            {
-                IsSuccess = false,
-                Message = "user not found"
-            };
-        }
+        if (await GetCurrentUser(userId) == null)
+            return Error.NotFound("Not found user");
         var users = await _context.Likes
             .Where(u => u.UserToId == userId)
-            .Select(u => new UserDto(
-                    u.UserFrom.Id
-                    //, user.IsActive
-                    , u.UserFrom.Name
-                    , u.UserFrom.Age
-                    , u.UserFrom.City
-                    , u.UserFrom.Bio
-                    , u.UserFrom.Gender
-                    , u.UserFrom.GenderPreference
-                    //, user.Roles.Select(r => new RoleDto(r.RoleId, r.Role.Name)).ToList()
-                    ,  u.UserFrom.Photos.Select(r => new PhotoDto(r.Id, r.Url, r.ContentType)).ToList())
-            )
+            .Select(u => u.UserFrom.ToDto())
             .ToListAsync();
-        return new ServiceResult<List<UserDto>>
-        {
-            IsSuccess = true,
-            Data = users,
-            Message = "ok"
-        };
+        return users;
     }
-    
 }

@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,16 +12,13 @@ public class UserController(UserService userService,
   ILogger<UserController> logger)
   : ControllerBase
 {
-
-    private int GetId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+    private int GetId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException());
 
     [HttpGet("/api/v2/profile")]
     [Authorize]
     public async Task<IActionResult> GetUserProfile(CancellationToken ct)
     {
         var userId = GetId();
-        if (userId == 0)
-            throw new UnauthorizedAccessException();
         var result = await userService.GetUserInfo(userId, ct);
 
         return result
@@ -45,11 +43,11 @@ public class UserController(UserService userService,
     [HttpGet("/find")]
     public async Task<IActionResult> Find()
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userId = GetId();
         var result = await userService.FindProfileAsync(userId);
         return result.ForEachError(x=>logger.LogError(x.Description??"Error loading profile"))
             .Match<IActionResult>(
-                v => Ok(v),
+                Ok,
                 err => BadRequest(err.Description));
     }
 

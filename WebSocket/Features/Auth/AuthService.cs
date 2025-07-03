@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebSocket.db;
+using WebSocket.Domain.dto;
 using WebSocket.dto;
 using WebSocket.Entity;
 

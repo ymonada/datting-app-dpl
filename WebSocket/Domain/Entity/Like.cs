@@ -1,4 +1,8 @@
-namespace WebSocket.Entity;
+using WebSocket.Domain.dto;
+using WebSocket.dto;
+using WebSocket.Entity;
+
+namespace WebSocket.Domain.Entity;
 
 public class Like
 {
@@ -7,4 +11,6 @@ public class Like
     public User UserFrom { get; set; } 
     public int UserToId { get; set; }
     public int UserFromId { get; set; }
+    public LikeDto ToDto() => new LikeDto(Id, UserFromId, UserToId);
+        
 }

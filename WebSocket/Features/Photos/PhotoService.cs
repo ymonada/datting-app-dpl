@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using WebSocket.db;
 using WebSocket.dto;
 using WebSocket.Entity;
-using Microsoft.AspNetCore.StaticFiles;
-namespace WebSocket.Service;
+using WebSocket.Service;
+
+namespace WebSocket.Features.Photos;
 
 public class PhotoService
 {
@@ -119,7 +121,6 @@ public class PhotoService
         var provider = new FileExtensionContentTypeProvider();
         if (!provider.TryGetContentType(filePath, out var contentType))
         {
-            // Тип за замовчуванням, якщо розширення невідоме
             contentType = "application/octet-stream";
         }
         return contentType;

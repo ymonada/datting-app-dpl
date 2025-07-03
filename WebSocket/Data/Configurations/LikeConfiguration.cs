@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WebSocket.Domain.Entity;
 using WebSocket.Entity;
 
 namespace WebSocket.db.Configurations;

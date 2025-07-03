@@ -1,4 +1,7 @@
 using System.Text.Json.Serialization;
+using Microsoft.IdentityModel.Tokens;
+using WebSocket.Domain.dto;
+using WebSocket.Domain.Entity;
 using WebSocket.dto;
 using WebSocket.Features.User;
 
@@ -29,7 +32,7 @@ public class User
     public ICollection<Photo> Photos { get; set; } = [];
     public ICollection<ProfileHistory> ProfileHistory { get; set; } = [];
     public ICollection<Match> Matches { get; set; } = [];
-    
+    public bool IsFullProfile ()=> Photos.Count > 0 && City.IsNullOrEmpty() && Age > 6;
     public UserDto ToDto() => new UserDto(
         Id
         , Name

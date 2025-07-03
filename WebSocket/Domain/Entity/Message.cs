@@ -1,3 +1,5 @@
+using WebSocket.Domain.Entity;
+
 namespace WebSocket.Entity;
 
 public class Message

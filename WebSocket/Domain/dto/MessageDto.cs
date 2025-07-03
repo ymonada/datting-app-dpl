@@ -1,4 +1,4 @@
-namespace WebSocket.dto;
+namespace WebSocket.Domain.dto;
 
 public class MessageDto
 {

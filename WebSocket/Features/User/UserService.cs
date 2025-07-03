@@ -1,13 +1,9 @@
-
-using System.Runtime.InteropServices.JavaScript;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using WebSocket.Errors;
 using WebSocket.db;
+using WebSocket.Domain.dto;
 using WebSocket.dto;
 using WebSocket.Entity;
-using WebSocket.Service;
 
 namespace WebSocket.Features.User;
 
@@ -28,17 +24,7 @@ public class UserService
             .ThenInclude(u=>u.UserFrom)
             .FirstOrDefaultAsync(u=> u.Id == userId, ct);
     }
-    private async Task<bool> ProfileIsFull(int userId, CancellationToken ct)
-    {
-        var user = await GetCurrentUser(userId ,ct);
-        if (user is { Photos: not null } 
-            && !user.City.IsNullOrEmpty() 
-            && user.Age > 6)
-        {
-            return true;
-        }
-        return false;
-    }
+    
     public async Task<Fin<UserDto,Error>> GetUserInfo(int idUser, CancellationToken ct)
     {
         var user = await GetCurrentUser(idUser, ct);
@@ -72,7 +58,8 @@ public class UserService
            .ExecuteDeleteAsync();
         return "ok";
     }
-    public async Task<Fin<string, Error>> SetProfileActive(int userId)
+
+    private async Task<Fin<string, Error>> SetProfileActive(int userId)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null)

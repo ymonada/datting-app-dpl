@@ -1,7 +1,7 @@
 using WebSocket.dto;
 using WebSocket.Entity;
 
-namespace WebSocket.Features.User;
+namespace WebSocket.Domain.dto;
 
 public record UserDto(int Id
     , string Name

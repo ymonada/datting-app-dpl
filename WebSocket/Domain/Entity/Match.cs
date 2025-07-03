@@ -1,4 +1,7 @@
-namespace WebSocket.Entity;
+using WebSocket.Domain.dto;
+using WebSocket.Entity;
+
+namespace WebSocket.Domain.Entity;
 
 public class Match
 {
@@ -7,6 +10,6 @@ public class Match
     public int SecondUserId {get; set;}
     public User FirstUser {get; set;}
     public User SecondUser {get; set;}
-
-    public ICollection<Message> MessagesHistory { get; set; } = [];
+    
+    public MatchDto ToDto() => new MatchDto(FirstUserId, SecondUserId);
 }

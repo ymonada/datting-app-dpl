@@ -1,41 +1,54 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebSocket.Entity;
+using WebSocket.Domain.Common;
+using WebSocket.Domain.UserAggregate;
 
-namespace WebSocket.db.Configurations;
+namespace WebSocket.Data.Configurations;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(u => u.Id);
-        builder.Property(u => u.Id).ValueGeneratedOnAdd();
-        builder.Property(u => u.IsActive);
-        builder.Property(u => u.Bio)
-            .HasMaxLength(1024);
-        builder.Property(u => u.Age);
-        builder.Property(u => u.Gender);
-        builder.Property(u => u.GenderPreference);
-        builder.Property(u => u.Name)
-            .HasMaxLength(64);
-        builder.Property(u => u.PasswordHash);
-        builder.Property(u => u.Email)
-            .HasMaxLength(128);
-        builder.Property(u => u.City);
-
-        builder.HasMany(u => u.Roles)
-            .WithOne(u => u.User)
-            .HasForeignKey(u => u.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasMany(u => u.Photos)
+    
+        builder.ComplexProperty(c => c.Email, email =>
+        {
+            email.Property(u=>u.Value)
+                .HasMaxLength(256)
+                .HasColumnName("Email")
+                .IsRequired();
+            email.Property(u=>u.Status)
+                .HasColumnName("Email_Status");
+        });
+        builder.ComplexProperty(c => c.Credentials, c =>
+        {
+            c.Property(u=>u.PasswordHash)
+                .HasColumnName("PasswordHash")
+                .IsRequired();
+        });
+        builder.Property(c => c.AccountStatus).IsRequired();
+       
+        builder.Property(u => u.CreatedDateTime)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        builder.Property(c => c.LastActiveDateTime);
+ 
+       builder.HasMany(u => u.Photos)
             .WithOne(u => u.User)
             .HasForeignKey(u => u.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(u => u.ReceiveLikes)
-            .WithOne(u => u.UserTo)
-            .HasForeignKey(u => u.UserToId)
+            .WithOne(u => u.User)
+            .HasForeignKey(u => u.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasOne(u=>u.Profile)
+            .WithOne(u=>u.User)
+            .HasForeignKey<Profile>(u=>u.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany(u=>u.Rooms)
+            .WithOne(u=>u.User)
+            .HasForeignKey(u=>u.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

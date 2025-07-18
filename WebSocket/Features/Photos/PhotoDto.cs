@@ -1,3 +1,3 @@
-namespace WebSocket.dto;
+namespace WebSocket.Features.Photos;
 
-public record PhotoDto(int Id, string Url, string ContentType);
+public record PhotoDto(Guid Id, string Url, string ContentType);

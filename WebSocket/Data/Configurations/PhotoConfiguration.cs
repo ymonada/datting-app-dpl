@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebSocket.Entity;
+using WebSocket.Domain.Entity;
 
-namespace WebSocket.db.Configurations;
+namespace WebSocket.Data.Configurations;
 
 public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
 {

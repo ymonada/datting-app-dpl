@@ -1,0 +1,2 @@
+namespace WebSocket.Contracts;
+

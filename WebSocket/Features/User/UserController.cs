@@ -12,56 +12,38 @@ public class UserController(UserService userService,
   ILogger<UserController> logger)
   : ControllerBase
 {
-    private int GetId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException());
+    private Guid GetId() => Guid.Parse((ReadOnlySpan<char>)(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new UnauthorizedAccessException()));
 
-    [HttpGet("/api/v2/profile")]
+    // [HttpGet("/api/v2/profile")]
+    // [Authorize]
+    // public async Task<IActionResult> GetUserProfile(CancellationToken ct)
+    // {
+    //     var userId = GetId();
+    //     var result = await userService.(userId, ct);
+    //
+    //     return result
+    //       .ForEachError(x => logger.LogError(x.Description))
+    //       .Match<IActionResult>(
+    //       v => Ok(v),
+    //       err =>
+    //       {
+    //           logger.LogError(err.Description);
+    //           return BadRequest(err.Description);
+    //       }
+    //     );
+    // }
+    
+    
+    
+    [HttpPost("/sendLike")]
     [Authorize]
-    public async Task<IActionResult> GetUserProfile(CancellationToken ct)
+    public async Task<IActionResult> SendLike(UserService.LikeRequest likeRequest, CancellationToken ct)
     {
-        var userId = GetId();
-        var result = await userService.GetUserInfo(userId, ct);
-
-        return result
-          .ForEachError(x => logger.LogError(x.Description))
-          .Match<IActionResult>(
-          v => Ok(v),
-          err =>
-          {
-              logger.LogError(err.Description);
-              return BadRequest(err.Description);
-          }
-        );
-    }
-
-    [HttpPost("/setActive")]
-    [Authorize]
-    public async Task<IActionResult> SetProfileActive()
-    {
-        await userService.SetActiveAll();
-        return Ok();
-    }
-    [HttpGet("/find")]
-    public async Task<IActionResult> Find()
-    {
-        var userId = GetId();
-        var result = await userService.FindProfileAsync(userId);
-        return result.ForEachError(x=>logger.LogError(x.Description??"Error loading profile"))
-            .Match<IActionResult>(
-                Ok,
-                err => BadRequest(err.Description));
-    }
-
-    [HttpPut("/updateProfile")]
-    [Authorize]
-    public async Task<IActionResult> UpdateProfile(UserUpdateProfileDto newProfile, CancellationToken ct)
-    {
-        var userId = GetId();
-        var result = await userService.UpdateMyProfile(userId, newProfile, ct);
-        return result
-            .ForEachError(x => logger.LogError(x.Description))
-            .Match<IActionResult>(
-                v => Ok(v),
-                err => BadRequest(err.Description));
+        // var userId = GetId();
+        var result = await userService.SendLike(likeRequest, ct);
+        return result.Match<IActionResult>(
+            v => Ok(v),
+            err => BadRequest(err));
     }
 
 }

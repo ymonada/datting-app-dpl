@@ -15,20 +15,20 @@ public class UserActivityCheckerService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                var inactiveusers = await context.Users
-                    .Where(u => DateTime.UtcNow - u.LastActiveTime > TimeSpan.FromMinutes(60))
-                    .ToListAsync(cancellationToken: stoppingToken);
-                foreach (var user in inactiveusers)
-                {
-                    user.IsActive = false;
-                }
-
-                if (inactiveusers.Any())
-                    await context.SaveChangesAsync(stoppingToken);
-            }
+            // using (var scope = _serviceProvider.CreateScope())
+            // {
+            //     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            //     var inactiveusers = await context.UserRooms
+            //         .Where(u => DateTime.UtcNow - u.LastActiveTime > TimeSpan.FromMinutes(60))
+            //         .ToListAsync(cancellationToken: stoppingToken);
+            //     foreach (var user in inactiveusers)
+            //     {
+            //         user.IsActive = false;
+            //     }
+            //
+            //     if (inactiveusers.Any())
+            //         await context.SaveChangesAsync(stoppingToken);
+            // }
 
             await Task.Delay(TimeSpan.FromMinutes(60), stoppingToken);
             

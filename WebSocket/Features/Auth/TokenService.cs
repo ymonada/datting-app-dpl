@@ -3,7 +3,6 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebSocket.dto;
-using WebSocket.Entity;
 
 public class TokenService
 {

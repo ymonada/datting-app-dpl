@@ -1,62 +1,64 @@
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebSocket.db;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using WebSocket.Domain.UserAggregate;
+using WebSocket.Domain.ValueObjects;
 using WebSocket.dto;
+using WebSocket.Features.User;
 using WebSocket.Service;
 
-namespace WebSocket.Controlles;
+namespace WebSocket.Features.Auth;
+
+public record RegisterRequest(Email Email, Credentials Credentials);
 
 [ApiController]
 [Route("[controller]")]
 public class AuthController : ControllerBase
 {
-  private readonly AuthService _authService;
+    private readonly AuthService _authService;
+    private readonly UserService _userService;
 
-  public AuthController(AuthService authService)
-  {
-    _authService = authService;
-  }
-  [HttpPost("login")]
-  public async Task<IActionResult> Login([FromBody] LoginDto request)
-  {
-    var result = await _authService.Login(request);
-
-    if (result.IsSuccess)
+    public AuthController(AuthService authService, UserService userService)
     {
-      await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, result.Data);
-      return Ok();
+      _authService = authService;
+      _userService =  userService;
     }
-    return Unauthorized(result.Message);
-
-  }
-  [HttpPost("register")]
-  public async Task<IActionResult> RegisterUser([FromBody] RegisterDto user)
-  {
-    var result = await _authService.Register(user);
-    if (!result.IsSuccess) return BadRequest(result.Message);
-    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, result.Data);
-    return Ok();
-  }
-  [HttpPost("logout")]
-  public async Task<IActionResult> Logout()
-  {
-    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-    return Ok(new { message = "Logout successful" });
-  }
-  [HttpGet("check")]
-  public IActionResult CheckAuth()
-  {
-    if (User.Identity?.IsAuthenticated == true)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto request)
     {
-      return Ok(new { isAuthenticated = true });
+      var result = await _authService.Login(request);
+
+      if (result.IsError)
+        return BadRequest(result.FirstError);
+      
+      await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, result.Value); 
+      return Ok(new { message = "Login successful" });
+      }
+
+    public record RegisterRequest(Email Email, Credentials Credentials);
+    [HttpPost("register")]
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterRequest req, CancellationToken ct)
+    {
+      var result = await _userService.RegisterUser(req.Email, req.Credentials, ct);
+      return result.Match<IActionResult>(Ok,BadRequest);
     }
-    return Unauthorized(new { isAuthenticated = false });
-  }
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+      await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+      return Ok(new { message = "Logout successful" });
+    }
+    [HttpGet("check")]
+    public IActionResult CheckAuth()
+    {
+      if (User.Identity?.IsAuthenticated == true)
+      {
+        return Ok(new { isAuthenticated = true });
+      }
+      return Unauthorized(new { isAuthenticated = false });
+    }
 }
 

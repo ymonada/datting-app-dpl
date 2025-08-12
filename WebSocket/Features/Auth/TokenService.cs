@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebSocket.dto;
+using WebSocket.Features.User;
 
 public class TokenService
 {
@@ -18,7 +19,6 @@ public class TokenService
             new Claim(JwtRegisteredClaimNames.Name, user.Email),
             
         }; 
-        claims.AddRange(user.Roles.Select(r => new Claim(ClaimTypes.Role, r.Name)));
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

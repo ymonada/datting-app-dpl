@@ -5,8 +5,10 @@ namespace WebSocket.Domain.RoomAggregate;
 
 public class Message: Entity<Guid>
 {
-    public UserRoom UserRoom { get; private set; }
-    public Guid UserRoomId { get; private set; }
+    public User User { get; set; }
+    public Guid UserId { get; set; }
+    public Room Room { get; set; }
+    public Guid RoomId { get; set; }
     public MessageContent Content { get; private set; }
     public Message(Guid id, MessageContent content):base(id)
     {

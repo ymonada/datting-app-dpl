@@ -17,9 +17,5 @@ public class UserRoomConfiguration : IEntityTypeConfiguration<UserRoom>
             .WithMany(u => u.UserRooms)
             .HasForeignKey(u => u.RoomId)
             .OnDelete(DeleteBehavior.Cascade);
-        builder.HasMany(u=>u.Messages)
-            .WithOne(m => m.UserRoom)
-            .HasForeignKey(m => m.UserRoomId)
-            .OnDelete(DeleteBehavior.Cascade);
-    }
+   }
 }

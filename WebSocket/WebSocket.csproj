@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\photos\" />
-    <Folder Include="wwwroot\photos\8\7\7\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +40,9 @@
     <_ContentIncludedByDefault Remove="wwwroot\photos\3\1\6\6131.jpg" />
     <_ContentIncludedByDefault Remove="wwwroot\photos\8\7\7\158778.jpg" />
     <_ContentIncludedByDefault Remove="wwwroot\photos\0\9\8\4c5fe417-89ca-41e5-b56f-647b57fdc1b6890.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\photos\3\0\6\269c7562-1e25-4fac-b08c-74c630677e0b603.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\photos\3\0\6\2bd7aa17-e284-49f7-9d13-07585a687a87603.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\photos\3\0\6\63c70def-afb0-4f02-9cb8-8e0bb31c0946603.jpg" />
   </ItemGroup>
 
 </Project>

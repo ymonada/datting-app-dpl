@@ -55,7 +55,7 @@ public class LikeController : ControllerBase
   // public async Task<IActionResult> SendLikeResponse([FromBody] int userLikedId)
   // {
   //   var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-  //   var result = await _likeService.LikeResponse(GetId(), userLikedId);
+  //   var result = await _likeService.LikeResponseDto(GetId(), userLikedId);
   //   return result.Match<IActionResult>(Ok
   //     , err => BadRequest(err.Description));
   // }

@@ -45,20 +45,18 @@ public class AuthController : ControllerBase
       var result = await _userService.RegisterUser(req.Email, req.Credentials, ct);
       return result.Match<IActionResult>(Ok,BadRequest);
     }
+    
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
       await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
       return Ok(new { message = "Logout successful" });
     }
+
     [HttpGet("check")]
-    public IActionResult CheckAuth()
-    {
-      if (User.Identity?.IsAuthenticated == true)
-      {
-        return Ok(new { isAuthenticated = true });
-      }
-      return Unauthorized(new { isAuthenticated = false });
-    }
+    public IActionResult CheckAuth() => User.Identity?.IsAuthenticated == true
+      ? Ok(new { isAuthenticated = true })
+      : Unauthorized(new { isAuthenticated = false });
+
 }
 

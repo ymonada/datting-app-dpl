@@ -1,5 +1,3 @@
-using WebSocket.Domain.dto;
+namespace WebSocket.Features.User;
 
-namespace WebSocket.dto;
-
-public record UserTokenDto(int Id, string Email, IEnumerable<RoleDto> Roles);
+public record UserTokenDto(int Id, string Email);

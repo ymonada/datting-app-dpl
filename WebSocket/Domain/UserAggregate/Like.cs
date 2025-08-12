@@ -1,4 +1,5 @@
 using WebSocket.Contracts;
+using WebSocket.Contracts.User;
 using WebSocket.Domain.Common;
 
 namespace WebSocket.Domain.UserAggregate;

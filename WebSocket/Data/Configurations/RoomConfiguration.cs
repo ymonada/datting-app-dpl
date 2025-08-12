@@ -14,6 +14,9 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
             .WithOne(u => u.Room)
             .HasForeignKey(r => r.RoomId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+        builder.HasMany(u=>u.Messages)
+            .WithOne(u=>u.Room)
+            .HasForeignKey(u=>u.RoomId)
+            .OnDelete(DeleteBehavior.Cascade);
       }
 }

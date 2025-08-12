@@ -1,10 +1,15 @@
+using WebSocket.Contracts;
+using WebSocket.Contracts.User;
 using WebSocket.Domain.Common;
 using WebSocket.Domain.dto;
 using WebSocket.Domain.Entity;
 using WebSocket.Domain.Enums;
 using WebSocket.Domain.RoomAggregate;
 using WebSocket.Domain.ValueObjects;
+using ErrorOr;
+using WebSocket.Contracts.User.Profile;
 using WebSocket.Features.Like;
+using WebSocket.Features.Photos;
 
 namespace WebSocket.Domain.UserAggregate;
 
@@ -20,6 +25,7 @@ public class User : Entity<Guid>
     public ICollection<Tags> Tags { get; private set; } = [];
     public ICollection<Photo> Photos { get; private set; } 
     public ICollection<UserRoom> Rooms { get; private set; } = [];
+    public ICollection<Message> Messages { get; private set; } = []; 
     private User(Email email, Credentials credentials)
         :base(Guid.NewGuid())
     {
@@ -43,12 +49,14 @@ public class User : Entity<Guid>
     
     public void SetStatusActive() => AccountStatus = AccountStatus.FullAndActiveWeek;
     public void SetStatusInactive() => AccountStatus = AccountStatus.FullAndInactiveWeek;
-    public UserDto AsDto() => new UserDto(
-        Id
-        , Profile.AsDto()
-        // , Photos.Select(r => new PhotoDto(r.Id, r.Url, r.ContentType)).ToList()
-    );
 
+    public void Update(ProfileDto profile, ICollection<Tags> tags, ICollection<Photo> photos)
+    {
+        Profile.Update(profile);
+        Tags = tags;
+        Photos = photos;
+    }
+    
     public static User CreateEmpty(Email email, Credentials credentials)
     {
         return new User(email, credentials);
@@ -60,4 +68,3 @@ public class User : Entity<Guid>
     }
     
 }
-public record UserDto(Guid Id, ProfileDto Profile);

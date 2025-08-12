@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Data;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text.RegularExpressions;
-
-namespace WebSocket.Errors;
+namespace WebSocket.Domain.Errors;
 
 public class Fin<T, R>
 {

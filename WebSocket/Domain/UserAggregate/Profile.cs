@@ -1,7 +1,6 @@
+using WebSocket.Contracts.User.Profile;
 using WebSocket.Domain.Common;
 using WebSocket.Domain.Enums;
-using WebSocket.Domain.ValueObjects;
-using EnvironmentName = Microsoft.AspNetCore.Hosting.EnvironmentName;
 
 namespace WebSocket.Domain.UserAggregate;
 
@@ -19,17 +18,23 @@ public class Profile : Entity<Guid>
         GenderPreference = genderPreference;
         Location = location;
     }
-    public Profile(Guid id):base(id)
+    public Profile(Guid id):base(id) { }
+
+    public void Update(ProfileDto dto)
     {
-        
+        Name = dto.Name;
+        Age = dto.Age;
+        Bio = dto.Bio;
+        Gender = dto.Gender;
+        GenderPreference = dto.GenderPreference;
+        Location = dto.Location;
     }
-    public string Name { get; init; } = string.Empty;
-    public byte Age {get; init; } =  0;
-    public string Bio {get; init; } =  string.Empty;
-    public Gender Gender { get; init; } = Gender.Any;
-    public Gender GenderPreference { get; init; } = Gender.Any;
-    public Location Location {get; init; } =  Location.CreateEmpty();
-    public ProfileDto AsDto() => new ProfileDto(Name, Age, Bio, Gender, GenderPreference, Location);
+    public string Name { get; private set; } = string.Empty;
+    public byte Age {get; private set; } =  0;
+    public string Bio {get; private set; } =  string.Empty;
+    public Gender Gender { get; private set; } = Gender.Any;
+    public Gender GenderPreference { get; private set; } = Gender.Any;
+    public Location Location {get; private set; } =  Location.CreateEmpty();
+    
     public static Profile CreateEmpty(Guid id) => new Profile(id);
 }
-public record ProfileDto(string Name,  byte Age, string Bio,Gender Gender, Gender GenderPreference, Location Location);
